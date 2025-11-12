@@ -4,10 +4,18 @@ from app.core.config import settings
 from app.core.circuit_breaker import circuit_breaker
 from app.utils.logger import logger
 
-cred = credentials.Certificate(settings.fcm_credentials_path)
-firebase_admin.initialize_app(cred)
+_firebase_initialized = False
+
+def initialize_firebase():
+    global _firebase_initialized
+    if not _firebase_initialized:
+        cred = credentials.Certificate(settings.fcm_credentials_path)
+        firebase_admin.initialize_app(cred)
+        _firebase_initialized = True
 
 async def send_push_notification(msg):
+    initialize_firebase()
+    
     if not circuit_breaker.can_call():
         raise Exception("Circuit breaker is open")
     
