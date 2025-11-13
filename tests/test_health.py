@@ -17,7 +17,7 @@ async def test_root():
         response = await client.get("/")
         assert response.status_code == 200
         assert "message" in response.json()
-        assert response.json()["version"] == "0.1.0"
+        assert response.json()["version"] == "1.0.0"
 
 @pytest.mark.asyncio
 async def test_metrics_endpoint():
